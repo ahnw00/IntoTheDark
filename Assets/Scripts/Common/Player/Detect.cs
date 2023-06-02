@@ -16,6 +16,7 @@ public class Detect : MonoBehaviour
     public Canvas canvas;
     GraphicRaycaster graphicRay;
     List<RaycastResult> results = new List<RaycastResult>();
+    SceneLoadManager sceneLoadManager;
     
     protected void Start()
     {
@@ -89,10 +90,18 @@ public class Detect : MonoBehaviour
     //만약 포인터가 UI위에 있을때 true를 반환 아니면 false를 반환
     private bool IsPointerOverUIObject()
     {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 1;
+        sceneLoadManager = FindObjectOfType<SceneLoadManager>();
+        if(!sceneLoadManager)
+        {
+            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+            eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+            return results.Count > 1;
+        }
+        else
+        {
+            return results.Count <= 1;
+        }
     }
 }
